@@ -8,17 +8,93 @@ export function loadTasks(): Task[] {
     if (!raw) return getInitialTasks();
     const parsed = JSON.parse(raw);
     if (!Array.isArray(parsed)) return getInitialTasks();
-    // Migration: if nakamura tasks missing, append default nakamura tasks
-    const hasNakamura = parsed.some((t: any) => t.assigneeId === "nakamura");
+    let result = parsed;
+    // Migration: nakamura tasks
+    const hasNakamura = result.some((t: any) => t.assigneeId === "nakamura");
     if (!hasNakamura) {
       const defaults = getInitialTasks();
-      const nakamuraDefaults = defaults.filter((t) => t.assigneeId === "nakamura");
-      return [...parsed, ...nakamuraDefaults];
+      result = [...result, ...defaults.filter((t) => t.assigneeId === "nakamura")];
     }
-    return parsed;
+    // Migration: 5/12 銀行面談タスク
+    const has512Bank = result.some((t: any) => t.title?.includes("十八親和銀行本店面談"));
+    if (!has512Bank) {
+      result = [...getBank512Tasks(), ...result];
+    }
+    return result;
   } catch {
     return getInitialTasks();
   }
+}
+
+function getBank512Tasks(): Task[] {
+  const now = new Date().toISOString();
+  return [
+    {
+      id: crypto.randomUUID(),
+      title: "🏦 5/12(火)11:00 十八親和銀行本店面談",
+      description: "担当:小川さん。紹介ルート:野副様→上川様→小川様。300万短期資金つなぎ融資希望。",
+      assigneeId: "kanata",
+      createdById: "kanata",
+      status: "todo",
+      priority: "high",
+      category: "meeting",
+      dueDate: "2026-05-12",
+      createdAt: now,
+      updatedAt: now,
+    },
+    {
+      id: crypto.randomUUID(),
+      title: "📄 履歴事項全部証明書(謄本)取得",
+      description: "法務局佐世保支局(光月町6-26・TEL: 0956-31-1144)で取得・600円・平日8:30-17:15。明日の銀行面談で必須。",
+      assigneeId: "kanata",
+      createdById: "kanata",
+      status: "todo",
+      priority: "high",
+      category: "admin",
+      dueDate: new Date().toISOString().split("T")[0],
+      createdAt: now,
+      updatedAt: now,
+    },
+    {
+      id: crypto.randomUUID(),
+      title: "📋 定款のコピー準備",
+      description: "自宅保管の定款をコピー or 印刷。明日の銀行面談で必須。",
+      assigneeId: "kanata",
+      createdById: "kanata",
+      status: "todo",
+      priority: "high",
+      category: "admin",
+      dueDate: new Date().toISOString().split("T")[0],
+      createdAt: now,
+      updatedAt: now,
+    },
+    {
+      id: crypto.randomUUID(),
+      title: "🔖 印鑑3種類の準備(実印・銀行印・社印)",
+      description: "明日の銀行面談で必要。確実に持参。",
+      assigneeId: "kanata",
+      createdById: "kanata",
+      status: "todo",
+      priority: "high",
+      category: "admin",
+      dueDate: "2026-05-12",
+      createdAt: now,
+      updatedAt: now,
+    },
+    {
+      id: crypto.randomUUID(),
+      title: "📦 持参書類セット作成",
+      description: "事業計画書5/2版・月次試算表・資金繰り表・LOI4社の写し・代表者経歴書・印鑑証明書。Desktopの今日印刷するから取り出して持参。",
+      assigneeId: "kanata",
+      createdById: "kanata",
+      status: "todo",
+      priority: "medium",
+      category: "admin",
+      dueDate: new Date().toISOString().split("T")[0],
+      createdAt: now,
+      updatedAt: now,
+    },
+  ];
 }
 
 export function saveTasks(tasks: Task[]): void {
