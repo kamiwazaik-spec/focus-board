@@ -1,4 +1,4 @@
-export type MemberId = "kanata" | "yusuke" | "leo";
+export type MemberId = "kanata" | "yusuke" | "leo" | "nakamura";
 
 export type TaskStatus = "todo" | "in_progress" | "done";
 
@@ -56,6 +56,13 @@ export const MEMBERS: Member[] = [
     role: "CTO",
     color: "#a855f7",
     bgColor: "rgba(168, 85, 247, 0.1)",
+  },
+  {
+    id: "nakamura",
+    name: "中村正幸",
+    role: "パートナー",
+    color: "#f97316",
+    bgColor: "rgba(249, 115, 22, 0.1)",
   },
 ];
 

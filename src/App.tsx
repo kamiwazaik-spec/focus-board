@@ -836,7 +836,7 @@ export default function App() {
   }, [tasks, search, filter]);
 
   const tasksByMember = useMemo(() => {
-    const map: Record<MemberId, Task[]> = { kanata: [], yusuke: [], leo: [] };
+    const map: Record<MemberId, Task[]> = { kanata: [], yusuke: [], leo: [], nakamura: [] };
     for (const t of filtered) map[t.assigneeId].push(t);
     // sort: in_progress first, then by priority then dueDate
     const priOrder: Record<TaskPriority, number> = { high: 0, medium: 1, low: 2 };
@@ -945,7 +945,7 @@ export default function App() {
 
       {/* Main */}
       <main className="mx-auto max-w-[1600px] p-4">
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
           {MEMBERS.map((m) => (
             <div key={m.id} className="rounded-xl border border-neutral-800 bg-neutral-900/30">
               <div

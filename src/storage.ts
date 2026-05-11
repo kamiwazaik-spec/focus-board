@@ -7,8 +7,15 @@ export function loadTasks(): Task[] {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return getInitialTasks();
     const parsed = JSON.parse(raw);
-    if (Array.isArray(parsed)) return parsed;
-    return getInitialTasks();
+    if (!Array.isArray(parsed)) return getInitialTasks();
+    // Migration: if nakamura tasks missing, append default nakamura tasks
+    const hasNakamura = parsed.some((t: any) => t.assigneeId === "nakamura");
+    if (!hasNakamura) {
+      const defaults = getInitialTasks();
+      const nakamuraDefaults = defaults.filter((t) => t.assigneeId === "nakamura");
+      return [...parsed, ...nakamuraDefaults];
+    }
+    return parsed;
   } catch {
     return getInitialTasks();
   }
@@ -116,6 +123,118 @@ function getInitialTasks(): Task[] {
       status: "todo",
       priority: "medium",
       category: "dev",
+      createdAt: now,
+      updatedAt: now,
+    },
+    // === 中村正幸（パートナー）枠 ===
+    {
+      id: crypto.randomUUID(),
+      title: "かなたLINE返信",
+      description: "ボイスメモ依頼書/補助金確認/リーガル相談への返答",
+      assigneeId: "nakamura",
+      createdById: "kanata",
+      status: "todo",
+      priority: "high",
+      category: "other",
+      dueDate: new Date().toISOString().split("T")[0],
+      createdAt: now,
+      updatedAt: now,
+    },
+    {
+      id: crypto.randomUUID(),
+      title: "ボイスメモ依頼書を3社に転送",
+      description: "豊永・高谷・岡崎にfocus作成のボイスメモ依頼書を送付",
+      assigneeId: "nakamura",
+      createdById: "kanata",
+      status: "todo",
+      priority: "high",
+      category: "sales",
+      dueDate: new Date().toISOString().split("T")[0],
+      createdAt: now,
+      updatedAt: now,
+    },
+    {
+      id: crypto.randomUUID(),
+      title: "豊永・高谷・岡崎の補助金スキーム使用有無確認",
+      description: "focusの請求書作成に直結。中村有輝(レスト)の使用有無確認",
+      assigneeId: "nakamura",
+      createdById: "kanata",
+      status: "todo",
+      priority: "high",
+      category: "subsidy",
+      createdAt: now,
+      updatedAt: now,
+    },
+    {
+      id: crypto.randomUUID(),
+      title: "IOBI 100選運営費を辻さんに確認",
+      description: "融資着金後の判断材料。年額・支払いタイミング確認",
+      assigneeId: "nakamura",
+      createdById: "kanata",
+      status: "todo",
+      priority: "medium",
+      category: "other",
+      createdAt: now,
+      updatedAt: now,
+    },
+    {
+      id: crypto.randomUUID(),
+      title: "二口グループ熊田さんへの事前情報整理",
+      description: "5/30訪問前のすり合わせ・演出準備のための情報共有",
+      assigneeId: "nakamura",
+      createdById: "kanata",
+      status: "todo",
+      priority: "medium",
+      category: "meeting",
+      dueDate: "2026-05-29",
+      createdAt: now,
+      updatedAt: now,
+    },
+    {
+      id: crypto.randomUUID(),
+      title: "ものづくりライフ3社の温度管理(継続)",
+      description: "5-8月の3ヶ月間、3社と密に連絡を取り温度低下を防ぐ。月1-2回の進捗確認",
+      assigneeId: "nakamura",
+      createdById: "kanata",
+      status: "in_progress",
+      priority: "medium",
+      category: "sales",
+      createdAt: now,
+      updatedAt: now,
+    },
+    {
+      id: crypto.randomUUID(),
+      title: "focusへの新規案件紹介",
+      description: "メディア経由のリード提供。ものづくりライフ視聴者からの引き合い",
+      assigneeId: "nakamura",
+      createdById: "kanata",
+      status: "todo",
+      priority: "low",
+      category: "sales",
+      createdAt: now,
+      updatedAt: now,
+    },
+    {
+      id: crypto.randomUUID(),
+      title: "月次MTG設定(focus3人+中村正幸)",
+      description: "焦点とものづくりライフの定例MTG。進捗共有・課題抽出",
+      assigneeId: "nakamura",
+      createdById: "kanata",
+      status: "todo",
+      priority: "low",
+      category: "meeting",
+      createdAt: now,
+      updatedAt: now,
+    },
+    {
+      id: crypto.randomUUID(),
+      title: "既存3社の補助金申請者の確認・共有",
+      description: "焦点が連座しない構造作りのため、3社の補助金申請者(レスト or 他)を確認しfocusに共有",
+      assigneeId: "nakamura",
+      createdById: "kanata",
+      status: "todo",
+      priority: "high",
+      category: "subsidy",
       createdAt: now,
       updatedAt: now,
     },
